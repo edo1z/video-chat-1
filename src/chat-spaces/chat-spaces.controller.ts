@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Render,
+} from '@nestjs/common';
 import { ChatSpacesService } from './chat-spaces.service';
 import { CreateChatSpaceDto } from './dto/create-chat-space.dto';
 import { UpdateChatSpaceDto } from './dto/update-chat-space.dto';
@@ -7,8 +16,14 @@ import { UpdateChatSpaceDto } from './dto/update-chat-space.dto';
 export class ChatSpacesController {
   constructor(private readonly chatSpacesService: ChatSpacesService) {}
 
-  @Post()
-  create(@Body() createChatSpaceDto: CreateChatSpaceDto) {
+  @Get('create')
+  @Render('create-chat-space')
+  getCreate() {
+    return {};
+  }
+
+  @Post('create')
+  postCreate(@Body() createChatSpaceDto: CreateChatSpaceDto) {
     return this.chatSpacesService.create(createChatSpaceDto);
   }
 
@@ -17,13 +32,17 @@ export class ChatSpacesController {
     return this.chatSpacesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatSpacesService.findOne(+id);
+  @Get(':url')
+  @Render('chat-space')
+  getChatSpace(@Param('url') url: string) {
+    return { url };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatSpaceDto: UpdateChatSpaceDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateChatSpaceDto: UpdateChatSpaceDto,
+  ) {
     return this.chatSpacesService.update(+id, updateChatSpaceDto);
   }
 
