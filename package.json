@@ -26,7 +26,8 @@
     "@nestjs/platform-express": "^9.4.0",
     "@nestjs/serve-static": "^3.0.1",
     "@prisma/client": "^4.12.0",
-    "hbs": "^4.2.0",
+    "@types/express-handlebars": "^6.0.0",
+    "express-handlebars": "^7.0.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },

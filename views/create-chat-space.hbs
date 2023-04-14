@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Chat Space</title>
-  <link rel="stylesheet" href="/styles/create-chat-space.css">
-</head>
-<body>
+{{#> layout}}
   <h1>Create Chat Space</h1>
   <form action="/chat-space/create" method="post">
     <label for="isPrivate">Private:</label>
     <input type="checkbox" name="isPrivate" id="isPrivate">
     <button type="submit">Create</button>
   </form>
-</body>
-</html>
+{{/layout}}

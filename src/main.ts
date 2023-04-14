@@ -2,15 +2,23 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as hbs from 'hbs';
+import { engine } from 'express-handlebars';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.setViewEngine('hbs');
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  hbs.registerPartials(join(__dirname, '..', 'views/partials'));
   app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.engine(
+    'hbs',
+    engine({
+      extname: 'hbs',
+      defaultLayout: 'default',
+      partialsDir: join(__dirname, '..', 'views/partials'),
+      layoutsDir: join(__dirname, '..', 'views/layouts'),
+    }),
+  );
+  app.setViewEngine('hbs');
 
   await app.listen(3000);
 }
