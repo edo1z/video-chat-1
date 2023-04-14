@@ -14,7 +14,7 @@ model ChatSpace {
   isPrivate       Boolean
   createdAt       DateTime          @default(now()) @db.Timestamp(6)
   updatedAt       DateTime          @default(now()) @db.Timestamp(6)
-  User            User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner           User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ChatSpaceMember ChatSpaceMember[]
   Invitation      Invitation[]
 }
