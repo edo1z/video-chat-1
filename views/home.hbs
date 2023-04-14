@@ -1,0 +1,18 @@
+{{#> layout}}
+  <div class="container">
+    <h1>Welcome, {{username}}!</h1>
+
+    <button onclick="location.href='/chat-spaces/create'">Create Chat Space</button>
+
+    <h2>Your Chat Spaces:</h2>
+    <ul>
+      {{#each chatSpaces}}
+        <li><a href="/chat-spaces/{{this.id}}">{{this.name}}</a></li>
+      {{/each}}
+    </ul>
+
+    <form action="/auth/logout" method="post">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+{{/layout}}

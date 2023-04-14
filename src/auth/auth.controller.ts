@@ -1,9 +1,21 @@
-import { Controller, Get, Post, Render, Req, Res, Body } from '@nestjs/common';
-import { Request, Response } from 'express';
+import {
+  Controller,
+  Get,
+  Post,
+  Render,
+  Req,
+  Body,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @Get('register')
   @Render('register')
   getRegister() {
@@ -24,7 +36,9 @@ export class AuthController {
   }
 
   @Post('login')
-  async postLogin(@Req() req: Request, @Res() res: Response) {
-    // ログイン処理を実装します
+  @UseGuards(LocalAuthGuard)
+  async postLogin(@Req() req: Request) {
+    await this.authService.login(req['user']);
+    return { message: 'ログインに成功しました' };
   }
 }
