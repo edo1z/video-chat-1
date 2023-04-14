@@ -1,0 +1,19 @@
+# docker-compose.yml
+
+version: "3.9"
+services:
+  db:
+    image: postgres:13
+    container_name: video-chat-db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: video-chat
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

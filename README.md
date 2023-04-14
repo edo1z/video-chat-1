@@ -16,36 +16,50 @@
 
 ## Database Structure
 
-### User
+```sql
+-- User table
+CREATE TABLE "User" (
+    "id" SERIAL PRIMARY KEY,
+    "email" TEXT NOT NULL UNIQUE,
+    "password" TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
-- id (Int, Primary Key, Auto Increment)
-- email (String, Unique)
-- password (String)
-- createdAt (DateTime)
-- updatedAt (DateTime)
-- chatSpace (Relation to ChatSpace)
+-- ChatSpace table
+CREATE TABLE "ChatSpace" (
+    "id" SERIAL PRIMARY KEY,
+    "ownerId" INTEGER NOT NULL,
+    "url" TEXT NOT NULL UNIQUE,
+    "isPrivate" BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-### ChatSpace
+    FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-- id (Int, Primary Key, Auto Increment)
-- ownerId (Int)
-- owner (Relation to User)
-- url (String, Unique)
-- isPrivate (Boolean)
-- createdAt (DateTime)
-- updatedAt (DateTime)
-- members (Relation to User)
-- invitations (Relation to Invitation)
+-- Invitation table
+CREATE TABLE "Invitation" (
+    "id" SERIAL PRIMARY KEY,
+    "chatSpaceId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-### Invitation
+    FOREIGN KEY ("chatSpaceId") REFERENCES "ChatSpace"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-- id (Int, Primary Key, Auto Increment)
-- chatSpaceId (Int)
-- chatSpace (Relation to ChatSpace)
-- userId (Int)
-- user (Relation to User)
-- createdAt (DateTime)
-- updatedAt (DateTime)
+-- Create intermediate table for ChatSpace members
+CREATE TABLE "ChatSpaceMember" (
+    "chatSpaceId" INTEGER NOT NULL,
+    "memberId" INTEGER NOT NULL,
+
+    FOREIGN KEY ("chatSpaceId") REFERENCES "ChatSpace"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("memberId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    PRIMARY KEY ("chatSpaceId", "memberId")
+);
+```
 
 ## Screens
 
