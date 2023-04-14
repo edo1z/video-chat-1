@@ -1,0 +1,18 @@
+{{#> layout}}
+  <div class="container">
+    <h1>Register</h1>
+    <form action="/auth/register" method="post">
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required>
+
+      <label for="confirm_password">Confirm Password:</label>
+      <input type="password" name="confirm_password" id="confirm_password" required>
+
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="/auth/login">Login</a></p>
+  </div>
+{{/layout}}
