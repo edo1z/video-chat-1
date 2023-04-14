@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 0 auto;
+}
+
+label, input {
+  margin-bottom: 10px;
+}
+
+/* Header styles */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.header-link {
+  margin-right: 10px;
+}
