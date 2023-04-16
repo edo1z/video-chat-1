@@ -12,6 +12,7 @@ import { SignUpInput } from './dto/sign-up.input';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import { validate } from 'class-validator';
+import { SignInInput } from './dto/sign-in.input';
 
 @Controller('auth')
 export class AuthController {
@@ -40,10 +41,14 @@ export class AuthController {
   }
 
   @Post('sign-in')
+  @Render('sign-in')
   @UseGuards(LocalAuthGuard)
-  async postSignIn(@Req() req: Request) {
-    await this.authService.signIn(req['user']);
-    const response = { user: req['user'], message: 'ログインに成功しました' };
-    return response;
+  async postSignIn(@Body() signInInput: SignInInput, @Req() req, @Res() res) {
+    if (!('user' in req) || !req['user']) {
+      return { ...signInInput, error_message: 'ログインに失敗しました' };
+    } else {
+      await this.authService.signIn(req['user']);
+      res.redirect('/home');
+    }
   }
 }

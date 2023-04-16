@@ -3,10 +3,13 @@
     <h1>Sign In</h1>
     <form action="/auth/sign-in" method="post">
       <label for="email">Email:</label>
-      <input type="email" name="email" id="email" required>
+      <input type="email" name="email" id="email" value="{{email}}" required>
       <label for="password">Password:</label>
       <input type="password" name="password" id="password" required>
       <button type="submit">Sign In</button>
     </form>
+    {{#if error_message}}
+      <p class="errors" style="text-align:center;">{{error_message}}</p>
+    {{/if}}
   </div>
 {{/layout}}
