@@ -4,11 +4,11 @@ import {
   Post,
   Render,
   Req,
+  Res,
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserInput } from './dto/create-user.input';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 
@@ -23,10 +23,9 @@ export class AuthController {
   }
 
   @Post('register')
-  postRegister(@Body() createUserDto: CreateUserDto) {
-    // ユーザー登録の処理を実装
-    // 登録が成功したらホーム画面にリダイレクト
-    // 失敗したらエラーメッセージを表示
+  async postRegister(@Body() createUserInput: CreateUserInput, @Res() res) {
+    await this.authService.createUser(createUserInput);
+    res.redirect('/auth/login');
   }
 
   @Get('login')
@@ -39,6 +38,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   async postLogin(@Req() req: Request) {
     await this.authService.login(req['user']);
-    return { message: 'ログインに成功しました' };
+    const response = { user: req['user'], message: 'ログインに成功しました' };
+    return response;
   }
 }
