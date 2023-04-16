@@ -23,9 +23,4 @@ export class AuthService {
     }
     return null;
   }
-
-  async signIn(user: any) {
-    // ユーザ情報を元に、ログインセッションを作成し、データベースに保存する
-    // ログイン情報の検証がOKの場合に実施する
-  }
 }

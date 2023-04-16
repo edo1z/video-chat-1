@@ -46,9 +46,8 @@ export class AuthController {
   async postSignIn(@Body() signInInput: SignInInput, @Req() req, @Res() res) {
     if (!('user' in req) || !req['user']) {
       return { ...signInInput, error_message: 'ログインに失敗しました' };
-    } else {
-      await this.authService.signIn(req['user']);
-      res.redirect('/home');
     }
+    req.session.user = req['user'];
+    res.redirect('/home');
   }
 }
