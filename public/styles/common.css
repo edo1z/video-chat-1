@@ -10,6 +10,14 @@ body {
   padding: 15px;
 }
 
+.errors {
+  color: red;
+  margin-top:20px;
+}
+.errors p {
+  margin: 10px 0;
+}
+
 form {
   display: flex;
   flex-direction: column;

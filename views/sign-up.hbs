@@ -3,7 +3,7 @@
     <h1>Sign Up</h1>
     <form action="/auth/sign-up" method="post">
       <label for="email">Email:</label>
-      <input type="email" name="email" id="email" required>
+      <input type="email" name="email" id="email" value="{{email}}" required>
 
       <label for="password">Password:</label>
       <input type="password" name="password" id="password" required>
@@ -12,6 +12,8 @@
       <input type="password" name="confirm_password" id="confirm_password" required>
 
       <button type="submit">SignUp</button>
+
+      {{> errors errors=errors}}
     </form>
     <p>Already have an account? <a href="/auth/sign-in">Sign In</a></p>
   </div>

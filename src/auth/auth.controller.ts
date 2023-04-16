@@ -11,6 +11,7 @@ import {
 import { SignUpInput } from './dto/sign-up.input';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
+import { validate } from 'class-validator';
 
 @Controller('auth')
 export class AuthController {
@@ -23,7 +24,11 @@ export class AuthController {
   }
 
   @Post('sign-up')
+  @Render('sign-up')
   async postSignUp(@Body() signUpInput: SignUpInput, @Res() res) {
+    signUpInput = Object.assign(new SignUpInput(), signUpInput);
+    const errors = await validate(signUpInput);
+    if (errors.length > 0) return { ...signUpInput, errors };
     await this.authService.createUser(signUpInput);
     res.redirect('/auth/sign-in');
   }
