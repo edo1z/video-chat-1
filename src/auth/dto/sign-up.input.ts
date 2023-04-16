@@ -1,4 +1,5 @@
 import { IsString, IsNotEmpty, IsEmail, MinLength } from 'class-validator';
+import { IsPasswordConfirmationMatch } from 'src/validations/password-confirmation-validator';
 
 export class SignUpInput {
   @IsNotEmpty()
@@ -13,5 +14,6 @@ export class SignUpInput {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
+  @IsPasswordConfirmationMatch('password')
   confirm_password: string;
 }
