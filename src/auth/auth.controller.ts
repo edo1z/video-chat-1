@@ -8,7 +8,7 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
+import { SignUpInput } from './dto/sign-up.input';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 
@@ -16,28 +16,28 @@ import { LocalAuthGuard } from './local-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('register')
-  @Render('register')
-  getRegister() {
+  @Get('sign-up')
+  @Render('sign-up')
+  getSignUp() {
     return {};
   }
 
-  @Post('register')
-  async postRegister(@Body() createUserInput: CreateUserInput, @Res() res) {
-    await this.authService.createUser(createUserInput);
-    res.redirect('/auth/login');
+  @Post('sign-up')
+  async postSignUp(@Body() signUpInput: SignUpInput, @Res() res) {
+    await this.authService.createUser(signUpInput);
+    res.redirect('/auth/sign-in');
   }
 
-  @Get('login')
-  @Render('login')
-  getLogin() {
+  @Get('sign-in')
+  @Render('sign-in')
+  getSignIn() {
     return {};
   }
 
-  @Post('login')
+  @Post('sign-in')
   @UseGuards(LocalAuthGuard)
-  async postLogin(@Req() req: Request) {
-    await this.authService.login(req['user']);
+  async postSignIn(@Req() req: Request) {
+    await this.authService.signIn(req['user']);
     const response = { user: req['user'], message: 'ログインに成功しました' };
     return response;
   }

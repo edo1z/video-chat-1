@@ -2,7 +2,7 @@
 
 ## System Requirements
 
-- Upon login, users can create their own dedicated space. When a space is created, a URL is issued.
+- Upon sign-in, users can create their own dedicated space. When a space is created, a URL is issued.
 - Users can create only one space at a time.
 - There are two types of spaces: public spaces and private spaces.
 - Anyone can join a public space if they know the space's URL.
@@ -63,54 +63,54 @@ CREATE TABLE "ChatSpaceMember" (
 
 ## Screens
 
-### 1. Login Screen
+### 1. Sign In Screen
 
-- Login Required: No
-- Display Items: Email input field, password input field, login button, registration link
-- Functions: Login
-- Transition Destination: Registration screen, Home screen (upon successful login)
+- Sign In Required: No
+- Display Items: Email input field, password input field, sign-in button, registration link
+- Functions: Sign In
+- Transition Destination: Registration screen, Home screen (upon successful sign-in)
 
 ### 2. Registration Screen
 
-- Login Required: No
-- Display Items: Email input field, password input field, password confirmation input field, register button, login link
+- Sign In Required: No
+- Display Items: Email input field, password input field, password confirmation input field, sign-up button, sign-in link
 - Functions: User registration
-- Transition Destination: Login screen, Home screen (upon successful registration)
+- Transition Destination: Sign In screen, Home screen (upon successful registration)
 
 ### 3. Home Screen
 
-- Login Required: Yes
+- Sign In Required: Yes
 - Display Items: Username, chat space creation button, chat space list, logout button
 - Functions: Chat space creation, chat space joining, logout
-- Transition Destination: Chat space screen, Login screen (upon logging out)
+- Transition Destination: Chat space screen, Sign In screen (upon logging out)
 
 ### 4. Chat Space Creation Screen
 
-- Login Required: Yes
+- Sign In Required: Yes
 - Display Items: Space name input field, public/private selection, create button, cancel button
 - Functions: Chat space creation
 - Transition Destination: Home screen, Chat space screen (upon successful creation)
 
 ### 5. Chat Space Screen
 
-- Login Required: Yes
+- Sign In Required: Yes
 - Display Items: Chat space name, participants list, video chat area, audio chat area, invitation link (for private spaces), chat space deletion button, home link
 - Functions: Video chat, audio chat, space deletion, invitation link copying (for private spaces)
 - Transition Destination: Home screen
 
 ### 6. Invitation Link Input Screen (Private Spaces)
 
-- Login Required: Yes
+- Sign In Required: Yes
 - Display Items: Invitation link input field, join button, cancel button
 - Functions: Join private space using invitation link
 - Transition Destination: Home screen (upon canceling), Chat space screen (upon successful joining)
 
 ### 7. User Settings Screen
 
-- Login Required: Yes
+- Sign In Required: Yes
 - Display Items: Email address display, password change input field, password change confirmation input field, password change button, account deletion button
 - Functions: Password change, account deletion
-- Transition Destination: Home screen (upon successful password change), Login screen (after account deletion)
+- Transition Destination: Home screen (upon successful password change), Sign In screen (after account deletion)
 
 ## License
 
