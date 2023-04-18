@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { join } from 'path';
 import { engine as hbsEngine } from 'express-handlebars';
 import hbsHelpers from './helpers/hbsHelpers';
@@ -15,6 +16,7 @@ const hbsConfig = hbsEngine({
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.engine('hbs', hbsConfig);
