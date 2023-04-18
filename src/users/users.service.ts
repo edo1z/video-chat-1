@@ -12,22 +12,25 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  findOne(id: number) {
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   create(data: CreateUserDto) {
     return this.prisma.user.create({ data });
   }
 
-  update(id: string, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserInput: UpdateUserInput) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserInput,
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    return this.prisma.user.delete({ where: { id } });
   }
 }

@@ -25,11 +25,11 @@ export class AuthController {
   }
 
   @Post('sign-up')
-  @Render('sign-up')
   async postSignUp(@Body() signUpInput: SignUpInput, @Res() res) {
     signUpInput = Object.assign(new SignUpInput(), signUpInput);
     const errors = await validate(signUpInput);
-    if (errors.length > 0) return { ...signUpInput, errors };
+    if (errors.length > 0)
+      return res.render('sign-up', { ...signUpInput, errors });
     await this.authService.createUser(signUpInput);
     res.redirect('/auth/sign-in');
   }
@@ -41,13 +41,21 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  @Render('sign-in')
   @UseGuards(LocalAuthGuard)
   async postSignIn(@Body() signInInput: SignInInput, @Req() req, @Res() res) {
     if (!('user' in req) || !req['user']) {
-      return { ...signInInput, error_message: 'ログインに失敗しました' };
+      return res.render('sign-in', {
+        ...signInInput,
+        error_message: 'ログインに失敗しました',
+      });
     }
     req.session.user = req['user'];
     res.redirect('/home');
+  }
+
+  @Get('sign-out')
+  async getSignOut(@Req() req, @Res() res) {
+    req.session.destroy();
+    res.redirect('/auth/sign-in');
   }
 }

@@ -3,10 +3,11 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 
 @Controller('home')
 export class HomeController {
-  @Get()
+  @Get('')
   @UseGuards(AuthenticatedGuard)
   @Render('home')
   getHome() {
+    console.log('getHome called');
     // ユーザー名とチャットスペースのリストを取得して表示する処理を実装
     return {
       username: 'John Doe', // 仮のユーザー名

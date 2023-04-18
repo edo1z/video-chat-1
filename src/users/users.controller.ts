@@ -7,12 +7,12 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserInput: UpdateUserInput) {
+  update(@Param('id') id: number, @Body() updateUserInput: UpdateUserInput) {
     return this.usersService.update(id, updateUserInput);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.usersService.remove(id);
   }
 }
