@@ -20,8 +20,11 @@
 -- User table
 CREATE TABLE "User" (
     "id" SERIAL PRIMARY KEY,
-    "email" TEXT NOT NULL UNIQUE,
-    "password" TEXT NOT NULL,
+    "email" VARCHAR(255) NOT NULL UNIQUE,
+    "password" VARCHAR(255) NOT NULL,
+    "username" VARCHAR(100) NOT NULL,
+    "bio" VARCHAR(200),
+    "picture" VARCHAR(500),
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,8 +33,9 @@ CREATE TABLE "User" (
 CREATE TABLE "ChatSpace" (
     "id" SERIAL PRIMARY KEY,
     "ownerId" INTEGER NOT NULL,
-    "url" TEXT NOT NULL UNIQUE,
+    "url" VARCHAR(500) NOT NULL UNIQUE,
     "isPrivate" BOOLEAN NOT NULL,
+    "description" VARCHAR(200),
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -73,7 +77,7 @@ CREATE TABLE "ChatSpaceMember" (
 ### 2. Registration Screen
 
 - Sign In Required: No
-- Display Items: Email input field, password input field, password confirmation input field, sign-up button, sign-in link
+- Display Items: Username, Email, password, password confirmation input fields, sign-up button, sign-in link
 - Functions: User registration
 - Transition Destination: Sign In screen, Home screen (upon successful registration)
 
