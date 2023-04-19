@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateUserInput } from './dto/update-user.input';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from '../settings/dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,10 +23,19 @@ export class UsersService {
     return this.prisma.user.create({ data });
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const data: any = {
+      username: updateUserDto.username,
+    };
+    if (updateUserDto.bio) {
+      data.bio = updateUserDto.bio;
+    }
+    if (updateUserDto.picture) {
+      data.picture = updateUserDto.picture;
+    }
     return this.prisma.user.update({
       where: { id },
-      data: updateUserInput,
+      data,
     });
   }
 
