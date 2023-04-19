@@ -1,10 +1,17 @@
 <header>
   <nav class="header-container">
-    <a href="/" class="header-title">Video Chat System</a>
-    <div>
-      <a href="/chat-spaces/create" class="header-link">Create ChatSpace</a>
-      <a href="/auth/sign-in" class="header-link">Sign In</a>
-      <a href="/auth/sign-up">SignUp</a>
-    </div>
+    {{#if loggedIn}}
+      <a href="/home" class="header-title">Video Chat System</a>
+      <div>
+        <a href="/chat-spaces/create" class="header-link">Create ChatSpace</a>
+        <a href="/auth/sign-out" class="header-link">Sign Out</a>
+      </div>
+    {{else}}
+      <a href="/" class="header-title">Video Chat System</a>
+      <div>
+        <a href="/auth/sign-in" class="header-link">Sign In</a>
+        <a href="/auth/sign-up">Sign Up</a>
+      </div>
+    {{/if}}
   </nav>
 </header>

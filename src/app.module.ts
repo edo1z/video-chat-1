@@ -8,6 +8,9 @@ import { HomeController } from './home/home.controller';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { InvitationsModule } from './invitations/invitations.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggedInInterceptor } from './interceptors/logged-in.interceptor';
+
 import * as ConnectPgSimple from 'connect-pg-simple';
 import * as pg from 'pg';
 import * as session from 'express-session';
@@ -25,7 +28,10 @@ dotenv.config();
     InvitationsModule,
   ],
   controllers: [AppController, AuthController, HomeController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_INTERCEPTOR, useClass: LoggedInInterceptor },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
