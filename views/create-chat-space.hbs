@@ -4,11 +4,18 @@
     <form action="/chat-space/create" method="post">
       <label for="spaceName">Space Name:</label>
       <input type="text" name="spaceName" id="spaceName" required>
-      <label for="isPrivate">Private:</label>
-      <input type="checkbox" name="isPrivate" id="isPrivate">
+      <label class="label-switch" for="isPrivate">
+        Private:
+        <div class="switch">
+          <input type="checkbox" name="isPrivate" id="isPrivate">
+          <span class="slider"></span>
+        </div>
+      </label>
+      <label for="description">Space Description:</label>
+      <textarea name="description" id="description"></textarea>
       <div class="buttons">
         <button type="submit">Create</button>
-        <button type="button" onclick="window.location.href='/';">Cancel</button>
+        <button type="button" onclick="window.location.href='/home';">Cancel</button>
       </div>
     </form>
   </div>

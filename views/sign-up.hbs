@@ -2,6 +2,9 @@
   <div class="container">
     <h1>Sign Up</h1>
     <form action="/auth/sign-up" method="post">
+      <label for="email">Username:</label>
+      <input type="email" name="username" id="username" value="{{username}}" required>
+
       <label for="email">Email:</label>
       <input type="email" name="email" id="email" value="{{email}}" required>
 
@@ -15,6 +18,6 @@
 
       {{> errors errors=errors}}
     </form>
-    <p>Already have an account? <a href="/auth/sign-in">Sign In</a></p>
+    <p class="center">Already have an account? <a href="/auth/sign-in">Sign In</a></p>
   </div>
 {{/layout}}
