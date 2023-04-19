@@ -76,6 +76,7 @@ header a {
 
 .header-link {
   margin-right: 10px;
+  text-decoration:none;
 }
 
 /* Footer styles */
@@ -196,4 +197,16 @@ input[type=checkbox] {
 .label-switch {
   display: flex;
   align-items: center;
+}
+
+#settings {
+  display: flex;
+}
+
+#setting_sidebar {
+  width: 30%;
+}
+
+#setting_contents {
+  width: 70%;
 }

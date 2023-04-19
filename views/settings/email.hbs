@@ -1,0 +1,20 @@
+{{#> layout}}
+  <div class="container">
+    <div id="settings">
+      <div id="setting_sidebar">
+        {{> settings_sidebar}}
+      </div>
+      <div id="setting_contents">
+        <h1>Change email</h1>
+        <form action="/settings/email" method="post">
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" value="{{email}}" required>
+
+          <button type="submit">Update</button>
+
+          {{> errors errors=errors}}
+        </form>
+      </div>
+    </div>
+  </div>
+{{/layout}}

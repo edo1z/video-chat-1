@@ -1,10 +1,8 @@
 {{#> layout}}
   <div class="container">
-    <h1>Welcome, {{username}}!</h1>
-
     <button onclick="location.href='/chat-spaces/create'">Create Chat Space</button>
 
-    <h2>Your Chat Spaces:</h2>
+    <h3 style="margin-top:50px;">Your Chat Spaces:</h3>
     <ul>
       {{#each chatSpaces}}
         <li><a href="/chat-spaces/{{this.id}}">{{this.name}}</a></li>

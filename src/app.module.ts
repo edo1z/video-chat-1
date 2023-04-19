@@ -3,13 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ChatSpacesModule } from './chat-spaces/chat-spaces.module';
-import { AuthController } from './auth/auth.controller';
 import { HomeController } from './home/home.controller';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { InvitationsModule } from './invitations/invitations.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggedInInterceptor } from './interceptors/logged-in.interceptor';
+import { SettingsModule } from './settings/settings.module';
 
 import * as ConnectPgSimple from 'connect-pg-simple';
 import * as pg from 'pg';
@@ -26,8 +26,9 @@ dotenv.config();
     AuthModule,
     PassportModule,
     InvitationsModule,
+    SettingsModule,
   ],
-  controllers: [AppController, AuthController, HomeController],
+  controllers: [AppController, HomeController],
   providers: [
     AppService,
     { provide: APP_INTERCEPTOR, useClass: LoggedInInterceptor },
