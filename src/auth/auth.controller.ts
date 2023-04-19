@@ -43,13 +43,6 @@ export class AuthController {
   @Post('sign-in')
   @UseGuards(LocalAuthGuard)
   async postSignIn(@Body() signInInput: SignInInput, @Req() req, @Res() res) {
-    if (!('user' in req) || !req['user']) {
-      return res.render('sign-in', {
-        ...signInInput,
-        error_message: 'ログインに失敗しました',
-      });
-    }
-    req.session.user = req['user'];
     res.redirect('/home');
   }
 
