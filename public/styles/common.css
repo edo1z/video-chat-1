@@ -29,6 +29,13 @@ label, input {
   margin-bottom: 10px;
 }
 
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
 /* Header styles */
 header {
   background: linear-gradient(to right, purple, blue);

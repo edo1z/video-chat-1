@@ -1,8 +1,13 @@
 {{#> layout}}
   <h1>Create Chat Space</h1>
   <form action="/chat-space/create" method="post">
+    <label for="spaceName">Space Name:</label>
+    <input type="text" name="spaceName" id="spaceName" required>
     <label for="isPrivate">Private:</label>
     <input type="checkbox" name="isPrivate" id="isPrivate">
-    <button type="submit">Create</button>
+    <div class="buttons">
+      <button type="submit">Create</button>
+      <button type="button" onclick="window.location.href='/';">Cancel</button>
+    </div>
   </form>
 {{/layout}}
