@@ -10,14 +10,25 @@ import {
   UseGuards,
   Res,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateEmailDto } from './dto/update-email.dto';
 import { UsersService } from '../users/users.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import {
+  DynamicMulterInterceptor,
+  InterceptorConfig,
+} from '../image-processing/dynamic-multer.interceptor';
+
+const multerConfig: InterceptorConfig = {
+  table: 'users',
+  column: 'picture',
+  fieldName: 'picture',
+  resize: { w: 200, h: 200, fit: true },
+  thumbnails: [{ w: 50, h: 50, fit: true }],
+  limit: 5,
+  ext: ['jpg', 'jpeg', 'png'],
+};
 
 @UseGuards(AuthenticatedGuard)
 @Controller('settings')
@@ -31,20 +42,7 @@ export class SettingsController {
     return { username, bio, picture };
   }
   @Post('user')
-  @UseInterceptors(
-    FileInterceptor('picture', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          return cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(new DynamicMulterInterceptor({ picture: multerConfig }))
   async postUser(
     @Req() req,
     @Body() updateUserDto: UpdateUserDto,
