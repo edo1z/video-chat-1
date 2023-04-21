@@ -10,14 +10,13 @@ import {
   UseGuards,
   Res,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateEmailDto } from './dto/update-email.dto';
 import { UsersService } from '../users/users.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { DynamicMulterInterceptor } from '../image-processing/dynamic-multer.interceptor';
+import { Template } from '../helpers/template.decorators';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('settings')
@@ -27,22 +26,24 @@ export class SettingsController {
   @Get('user')
   @Render('settings/user')
   async getUser(@Req() req) {
-    const { username, bio, picture } = req.user;
-    return { username, bio, picture };
+    const { username, bio, picture, id } = req.user;
+    return { username, bio, picture, id };
   }
+
+  // TODO CSRF, UserID Check
+  // 別人のUserIDを渡すと別人のプロフィール画像を登録できる。画像保存前にUserIDをチェックする必要がある。
+  // IDの有効性チェックはモデル毎、メソッド毎に方法が違う。それぞれ固有のValidationを事前に実行する必要がある。
   @Post('user')
+  @Template('settings/user')
   @UseInterceptors(
-    FileInterceptor('picture', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          return cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
+    new DynamicMulterInterceptor({
+      table: 'users',
+      column: 'picture',
+      fieldName: 'picture',
+      resize: { w: 400, h: 400, fit: true },
+      thumbnails: [{ w: 100, h: 100, fit: true }],
+      limit: 3072,
+      ext: ['hoge', 'jpg', 'png'],
     }),
   )
   async postUser(
@@ -66,6 +67,7 @@ export class SettingsController {
   password() {
     return {};
   }
+
   @Post('password')
   postPassword(@Body() updatePasswordDto: UpdatePasswordDto) {
     return {};
@@ -76,6 +78,7 @@ export class SettingsController {
   email() {
     return {};
   }
+
   @Post('email')
   postEmail(@Body() updateEmailDto: UpdateEmailDto) {
     return {};
@@ -86,6 +89,7 @@ export class SettingsController {
   deleteAccount() {
     return {};
   }
+
   @Post('delete-account')
   deleteDeleteAccount() {
     return {};
