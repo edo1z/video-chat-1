@@ -12,6 +12,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const response = ctx.getResponse();
     const status = exception.getStatus();
+    const template = request.template;
     switch (status) {
       case 401:
         const email = 'email' in request.body ? request.body.email : '';
@@ -24,12 +25,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
         response.status(status).redirect('/auth/sign-in');
         break;
       case 404:
-        response.render('error', { status, error_message: 'Not found' });
+        response.render(template || 'error', {
+          status,
+          error_message: 'Not found',
+          ...request.body,
+        });
         break;
       default:
-        response.render('error', {
+        response.render(template || 'error', {
           status,
           error_message: 'An unknown error occurred',
+          ...request.body,
         });
     }
   }

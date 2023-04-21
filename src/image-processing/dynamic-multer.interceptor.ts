@@ -1,4 +1,10 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  NestInterceptor,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import * as multer from 'multer';
 import { diskStorage } from 'multer';
@@ -7,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
-export interface InterceptorConfig {
+export interface DynamicMulterConfig {
   table: string;
   column: string;
   fieldName: string;
@@ -18,18 +24,43 @@ export interface InterceptorConfig {
 }
 
 export class DynamicMulterInterceptor implements NestInterceptor {
-  constructor(private readonly configs: { [key: string]: InterceptorConfig }) {}
+  private readonly configs: DynamicMulterConfig[];
+  private readonly DEFAULT_LIMIT = 5; // KB
+  private readonly DEFAULT_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
-  createStorage = (config: InterceptorConfig): multer.StorageEngine => {
+  constructor(
+    private readonly _configs: DynamicMulterConfig[] | DynamicMulterConfig,
+  ) {
+    if (Array.isArray(this._configs)) {
+      this.configs = this._configs;
+    } else {
+      this.configs = [this._configs];
+    }
+  }
+
+  createStorage = (config: DynamicMulterConfig): multer.StorageEngine => {
     return diskStorage({
       destination: async (req, file, cb) => {
-        const dir = `./public/images/${config.table}/${req.body.id}/${config.column}`;
+        const dir = `./public/images/${config.table}/temp/${config.column}`;
         await fs.mkdir(dir, { recursive: true });
         cb(null, dir);
       },
       filename: async (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        // TODO : file type check
+        const ext = path.extname(file.originalname).replace('.', '');
+        const allowedExtensions = config.ext
+          ? config.ext.filter((ext) => this.DEFAULT_EXT.includes(ext))
+          : this.DEFAULT_EXT;
+        const lowerCaseExt = ext.toLowerCase();
+        if (
+          !allowedExtensions.some(
+            (allowedExt) =>
+              lowerCaseExt === allowedExt ||
+              (allowedExt === 'jpg' && lowerCaseExt === 'jpeg') ||
+              (allowedExt === 'jpeg' && lowerCaseExt === 'jpg'),
+          )
+        ) {
+          return cb(new Error('Invalid file type'), null);
+        }
         const uuid = uuidv4();
         const filename = `${uuid}${ext}`;
         cb(null, filename);
@@ -42,8 +73,12 @@ export class DynamicMulterInterceptor implements NestInterceptor {
     res,
     fieldName: string,
     storage: multer.StorageEngine,
+    limit: number,
   ) => {
-    const upload = multer({ storage }).array(fieldName);
+    const upload = multer({
+      storage,
+      limits: { fileSize: limit * 1024 },
+    }).array(fieldName);
     await new Promise<void>((resolve, reject) =>
       upload(req, res, (err: any) => {
         if (err) {
@@ -55,11 +90,18 @@ export class DynamicMulterInterceptor implements NestInterceptor {
     );
   };
 
-  resize = async (config: InterceptorConfig, originalPath: string) => {
-    const resizedPath = originalPath.replace(
-      path.extname(originalPath),
-      `_${config.resize.w}x${config.resize.h}${path.extname(originalPath)}`,
-    );
+  resize = async (
+    config: DynamicMulterConfig,
+    originalPath: string,
+    tempDir: string,
+    baseDir: string,
+  ) => {
+    const resizedPath = originalPath
+      .replace(tempDir, baseDir)
+      .replace(
+        path.extname(originalPath),
+        `_${config.resize.w}x${config.resize.h}${path.extname(originalPath)}`,
+      );
     await sharp(originalPath)
       .resize(config.resize.w, config.resize.h, {
         fit: config.resize.fit ? 'cover' : 'contain',
@@ -68,14 +110,18 @@ export class DynamicMulterInterceptor implements NestInterceptor {
   };
 
   createThumbnails = async (
-    config: InterceptorConfig,
+    config: DynamicMulterConfig,
     originalPath: string,
+    tempDir: string,
+    baseDir: string,
   ) => {
     for (const thumbnail of config.thumbnails) {
-      const thumbnailPath = originalPath.replace(
-        path.extname(originalPath),
-        `_${thumbnail.w}x${thumbnail.h}${path.extname(originalPath)}`,
-      );
+      const thumbnailPath = originalPath
+        .replace(tempDir, baseDir)
+        .replace(
+          path.extname(originalPath),
+          `_${thumbnail.w}x${thumbnail.h}${path.extname(originalPath)}`,
+        );
       await sharp(originalPath)
         .resize(thumbnail.w, thumbnail.h, {
           fit: thumbnail.fit ? 'cover' : 'contain',
@@ -92,16 +138,29 @@ export class DynamicMulterInterceptor implements NestInterceptor {
     const req = ctx.getRequest();
     const res = ctx.getResponse();
 
-    for (const fieldName in this.configs) {
-      const config = this.configs[fieldName];
+    for (const config of this.configs) {
       const storage = await this.createStorage(config);
-      await this.upload(req, res, fieldName, storage);
-      const file = req.files.find((file) => file.fieldname === fieldName);
+      await this.upload(
+        req,
+        res,
+        config.fieldName,
+        storage,
+        config.limit ?? this.DEFAULT_LIMIT,
+      );
+      const file = req.files.find(
+        (file) => file.fieldname === config.fieldName,
+      );
+      if (!req.body.id) {
+        throw new HttpException('ID is required', HttpStatus.BAD_REQUEST);
+      }
       if (!file) continue;
       const baseDir = `./public/images/${config.table}/${req.body.id}/${config.column}`;
-      const originalPath = `${baseDir}/${file.filename}`;
-      if (config.resize) await this.resize(config, originalPath);
-      if (config.thumbnails) await this.createThumbnails(config, originalPath);
+      const tempDir = `./public/images/${config.table}/temp/${config.column}`;
+      const originalPath = `${tempDir}/${file.filename}`;
+      if (config.resize)
+        await this.resize(config, originalPath, tempDir, baseDir);
+      if (config.thumbnails)
+        await this.createThumbnails(config, originalPath, tempDir, baseDir);
       if (config.resize || config.thumbnails) await fs.unlink(originalPath);
     }
 

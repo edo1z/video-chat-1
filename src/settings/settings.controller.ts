@@ -15,20 +15,8 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateEmailDto } from './dto/update-email.dto';
 import { UsersService } from '../users/users.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
-import {
-  DynamicMulterInterceptor,
-  InterceptorConfig,
-} from '../image-processing/dynamic-multer.interceptor';
-
-const multerConfig: InterceptorConfig = {
-  table: 'users',
-  column: 'picture',
-  fieldName: 'picture',
-  resize: { w: 200, h: 200, fit: true },
-  thumbnails: [{ w: 50, h: 50, fit: true }],
-  limit: 5,
-  ext: ['jpg', 'jpeg', 'png'],
-};
+import { DynamicMulterInterceptor } from '../image-processing/dynamic-multer.interceptor';
+import { Template } from '../helpers/template.decorators';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('settings')
@@ -43,7 +31,18 @@ export class SettingsController {
   }
 
   @Post('user')
-  @UseInterceptors(new DynamicMulterInterceptor({ picture: multerConfig }))
+  @Template('settings/user')
+  @UseInterceptors(
+    new DynamicMulterInterceptor({
+      table: 'users',
+      column: 'picture',
+      fieldName: 'picture',
+      resize: { w: 400, h: 400, fit: true },
+      thumbnails: [{ w: 100, h: 100, fit: true }],
+      limit: 3072,
+      ext: ['hoge', 'jpg', 'png'],
+    }),
+  )
   async postUser(
     @Req() req,
     @Body() updateUserDto: UpdateUserDto,
