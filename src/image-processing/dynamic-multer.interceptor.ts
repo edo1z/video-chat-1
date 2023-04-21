@@ -62,7 +62,7 @@ export class DynamicMulterInterceptor implements NestInterceptor {
           return cb(new Error('Invalid file type'), null);
         }
         const uuid = uuidv4();
-        const filename = `${uuid}${ext}`;
+        const filename = `${uuid}.${ext}`;
         cb(null, filename);
       },
     });
@@ -102,6 +102,8 @@ export class DynamicMulterInterceptor implements NestInterceptor {
         path.extname(originalPath),
         `_${config.resize.w}x${config.resize.h}${path.extname(originalPath)}`,
       );
+    const dirPath = path.dirname(resizedPath);
+    await fs.mkdir(dirPath, { recursive: true });
     await sharp(originalPath)
       .resize(config.resize.w, config.resize.h, {
         fit: config.resize.fit ? 'cover' : 'contain',
@@ -122,6 +124,8 @@ export class DynamicMulterInterceptor implements NestInterceptor {
           path.extname(originalPath),
           `_${thumbnail.w}x${thumbnail.h}${path.extname(originalPath)}`,
         );
+      const dirPath = path.dirname(thumbnailPath);
+      await fs.mkdir(dirPath, { recursive: true });
       await sharp(originalPath)
         .resize(thumbnail.w, thumbnail.h, {
           fit: thumbnail.fit ? 'cover' : 'contain',

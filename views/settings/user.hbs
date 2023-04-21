@@ -16,6 +16,8 @@
           <label for="picture">Profile picture:</label>
           <input type="file" name="picture" id="picture" accept="image/*">
 
+          <input type="hidden" name="id" value="{{id}}">
+
           <button type="submit">Update</button>
 
           {{> errors errors=errors}}

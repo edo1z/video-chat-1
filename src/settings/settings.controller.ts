@@ -26,10 +26,13 @@ export class SettingsController {
   @Get('user')
   @Render('settings/user')
   async getUser(@Req() req) {
-    const { username, bio, picture } = req.user;
-    return { username, bio, picture };
+    const { username, bio, picture, id } = req.user;
+    return { username, bio, picture, id };
   }
 
+  // TODO CSRF, UserID Check
+  // 別人のUserIDを渡すと別人のプロフィール画像を登録できる。画像保存前にUserIDをチェックする必要がある。
+  // IDの有効性チェックはモデル毎、メソッド毎に方法が違う。それぞれ固有のValidationを事前に実行する必要がある。
   @Post('user')
   @Template('settings/user')
   @UseInterceptors(
