@@ -41,6 +41,7 @@ export class SettingsController {
     const { username, bio, picture } = req.user;
     return { username, bio, picture };
   }
+
   @Post('user')
   @UseInterceptors(new DynamicMulterInterceptor({ picture: multerConfig }))
   async postUser(
@@ -64,6 +65,7 @@ export class SettingsController {
   password() {
     return {};
   }
+
   @Post('password')
   postPassword(@Body() updatePasswordDto: UpdatePasswordDto) {
     return {};
@@ -74,6 +76,7 @@ export class SettingsController {
   email() {
     return {};
   }
+
   @Post('email')
   postEmail(@Body() updateEmailDto: UpdateEmailDto) {
     return {};
@@ -84,6 +87,7 @@ export class SettingsController {
   deleteAccount() {
     return {};
   }
+
   @Post('delete-account')
   deleteDeleteAccount() {
     return {};
