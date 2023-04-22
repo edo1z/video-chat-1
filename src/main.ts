@@ -18,7 +18,7 @@ const hbsConfig = hbsEngine({
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TemplateInterceptor(new Reflector()));
   app.useStaticAssets(join(__dirname, '..', 'public'));

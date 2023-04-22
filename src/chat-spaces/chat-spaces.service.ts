@@ -29,6 +29,10 @@ export class ChatSpacesService {
     return this.prisma.chatSpace.findUnique({ where: { id } });
   }
 
+  findAllByUserId(ownerId: number) {
+    return this.prisma.chatSpace.findMany({ where: { ownerId } });
+  }
+
   update(id: number, updateChatSpaceDto: UpdateChatSpaceDto) {
     return this.prisma.chatSpace.update({
       where: { id },
