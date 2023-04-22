@@ -43,4 +43,28 @@ export class ChatSpacesService {
   remove(id: number) {
     return this.prisma.chatSpace.delete({ where: { id } });
   }
+
+  async getParticipants(chatSpaceId: number) {
+    // チャットスペースの参加者を取得
+    const chatSpace = await this.prisma.chatSpace.findUnique({
+      where: { id: chatSpaceId },
+      include: { ChatSpaceMember: true },
+    });
+
+    if (!chatSpace) {
+      throw new Error('ChatSpace not found');
+    }
+
+    // 参加者のユーザー情報を取得
+    const participants = await Promise.all(
+      chatSpace.ChatSpaceMember.map(async (member) => {
+        const user = await this.prisma.user.findUnique({
+          where: { id: member.memberId },
+        });
+        return user;
+      }),
+    );
+
+    return participants;
+  }
 }

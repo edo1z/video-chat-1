@@ -19,17 +19,17 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { v4 as uuidv4 } from 'uuid';
 
 @UseGuards(AuthenticatedGuard)
-@Controller('chat-spaces')
+@Controller()
 export class ChatSpacesController {
   constructor(private readonly chatSpacesService: ChatSpacesService) {}
 
-  @Get('create')
+  @Get('/chat-spaces/create')
   @Render('create-chat-space')
   getCreate() {
     return {};
   }
 
-  @Post('create')
+  @Post('/chat-spaces/create')
   async postCreate(
     @Body() createChatSpaceDto: CreateChatSpaceDto,
     @Req() req,
@@ -41,17 +41,17 @@ export class ChatSpacesController {
     res.redirect('/home');
   }
 
-  // TODO https://xxxx.com/c/userId/uuid-of-chat-space
   @Get('/c/:userId/:url')
   @Render('chat-space')
   getChatSpace(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('url') url: string,
   ) {
+    console.log('chat-space!!!');
     return { url };
   }
 
-  @Patch(':id')
+  @Patch('/chat-spaces/:id')
   update(
     @Param('id') id: string,
     @Body() updateChatSpaceDto: UpdateChatSpaceDto,
@@ -59,7 +59,7 @@ export class ChatSpacesController {
     return this.chatSpacesService.update(+id, updateChatSpaceDto);
   }
 
-  @Delete(':id')
+  @Delete('/chat-spaces/:id')
   remove(@Param('id') id: string) {
     return this.chatSpacesService.remove(+id);
   }

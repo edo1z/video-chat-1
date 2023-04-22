@@ -16,7 +16,7 @@ export class HomeController {
 
     const chatSpacesWithUrl = chatSpaces.map((chatSpace) => ({
       ...chatSpace,
-      url: `http://localhost:3000/c/${chatSpace.url}`,
+      url: `http://localhost:3000/c/${req.user.id}/${chatSpace.url}`,
     }));
 
     console.log('chatSpacesWithUrl', chatSpacesWithUrl);
