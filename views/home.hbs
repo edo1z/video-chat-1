@@ -1,12 +1,30 @@
 {{#> layout}}
   <div class="container">
+    <div style="font-size:20px; font-weight:bold; margin:20px 0;">
+      {{username}}
+    </div>
     <button onclick="location.href='/chat-spaces/create'">Create Chat Space</button>
 
-    <h3 style="margin-top:50px;">Your Chat Spaces:</h3>
-    <ul>
-      {{#each chatSpaces}}
-        <li><a href="/chat-spaces/{{this.id}}">{{this.name}}</a></li>
-      {{/each}}
-    </ul>
+    <h3 style="margin-top:50px;">Your Created Chat Spaces:</h3>
+    <table border="1" style="border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Public/Private</th>
+          <th>Description</th>
+          <th>Last Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each chatSpaces}}
+          <tr>
+            <td><a href="{{this.url}}">{{this.name}}</a></td>
+            <td>{{#if this.isPublic}}Public{{else}}Private{{/if}}</td>
+            <td>{{this.description}}</td>
+            <td>{{formatDate this.updatedAt}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
 {{/layout}}

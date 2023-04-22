@@ -1,21 +1,30 @@
-import { Controller, Get, Render, UseGuards } from '@nestjs/common';
+import { Controller, Get, Render, UseGuards, Req } from '@nestjs/common';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
+import { ChatSpacesService } from '../chat-spaces/chat-spaces.service';
 
 @Controller('home')
 export class HomeController {
+  constructor(private readonly chatSpacesService: ChatSpacesService) {}
+
   @Get('')
   @UseGuards(AuthenticatedGuard)
   @Render('home')
-  getHome() {
-    console.log('getHome called');
-    // ユーザー名とチャットスペースのリストを取得して表示する処理を実装
+  async getHome(@Req() req) {
+    const chatSpaces = await this.chatSpacesService.findAllByUserId(
+      req.user.id,
+    );
+
+    const chatSpacesWithUrl = chatSpaces.map((chatSpace) => ({
+      ...chatSpace,
+      url: `http://localhost:3000/c/${req.user.id}/${chatSpace.url}`,
+    }));
+
+    console.log('chatSpacesWithUrl', chatSpacesWithUrl);
+
     return {
-      username: 'John Doe', // 仮のユーザー名
-      chatSpaces: [
-        // 仮のチャットスペースリスト
-        { id: 1, name: 'Chat Space 1' },
-        { id: 2, name: 'Chat Space 2' },
-      ],
+      username: req.user.username,
+      picture: req.user.picture,
+      chatSpaces: chatSpacesWithUrl,
     };
   }
 }

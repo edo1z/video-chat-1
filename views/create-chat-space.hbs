@@ -1,13 +1,14 @@
 {{#> layout}}
   <div class="container">
     <h1>Create Chat Space</h1>
-    <form action="/chat-space/create" method="post">
+    <form action="/chat-spaces/create" method="post">
       <label for="spaceName">Space Name:</label>
-      <input type="text" name="spaceName" id="spaceName" required>
-      <label class="label-switch" for="isPrivate">
+      <input type="text" name="name" id="name" required>
+      <label class="label-switch" for="isPrivateCheckbox">
         Private:
         <div class="switch">
-          <input type="checkbox" name="isPrivate" id="isPrivate">
+          <input type="hidden" name="isPrivate" id="isPrivateHidden" value="false">
+          <input type="checkbox" id="isPrivateCheckbox" onchange="updateIsPrivate();" type="checkbox">
           <span class="slider"></span>
         </div>
       </label>
@@ -19,4 +20,11 @@
       </div>
     </form>
   </div>
+  <script>
+    function updateIsPrivate() {
+      const isPrivateCheckbox = document.getElementById('isPrivateCheckbox');
+      const isPrivateHidden = document.getElementById('isPrivateHidden');
+      isPrivateHidden.value = isPrivateCheckbox.checked.toString();
+    }
+  </script>
 {{/layout}}

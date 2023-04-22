@@ -12,6 +12,7 @@ model ChatSpace {
   ownerId         Int
   url             String            @unique @db.VarChar(500)
   isPrivate       Boolean
+  name            String            @db.VarChar(100)
   description     String?           @db.VarChar(200)
   createdAt       DateTime          @default(now()) @db.Timestamp(6)
   updatedAt       DateTime          @default(now()) @db.Timestamp(6)

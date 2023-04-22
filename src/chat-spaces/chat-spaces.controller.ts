@@ -7,38 +7,51 @@ import {
   Param,
   Delete,
   Render,
+  UseGuards,
+  Req,
+  Res,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ChatSpacesService } from './chat-spaces.service';
 import { CreateChatSpaceDto } from './dto/create-chat-space.dto';
 import { UpdateChatSpaceDto } from './dto/update-chat-space.dto';
+import { AuthenticatedGuard } from '../auth/authenticated.guard';
+import { v4 as uuidv4 } from 'uuid';
 
-@Controller('chat-spaces')
+@UseGuards(AuthenticatedGuard)
+@Controller()
 export class ChatSpacesController {
   constructor(private readonly chatSpacesService: ChatSpacesService) {}
 
-  @Get('create')
+  @Get('/chat-spaces/create')
   @Render('create-chat-space')
   getCreate() {
     return {};
   }
 
-  @Post('create')
-  postCreate(@Body() createChatSpaceDto: CreateChatSpaceDto) {
-    return this.chatSpacesService.create(createChatSpaceDto);
+  @Post('/chat-spaces/create')
+  async postCreate(
+    @Body() createChatSpaceDto: CreateChatSpaceDto,
+    @Req() req,
+    @Res() res,
+  ) {
+    const ownerId = req.user['id'];
+    const url = uuidv4();
+    await this.chatSpacesService.create(createChatSpaceDto, ownerId, url);
+    res.redirect('/home');
   }
 
-  @Get()
-  findAll() {
-    return this.chatSpacesService.findAll();
-  }
-
-  @Get(':url')
+  @Get('/c/:userId/:url')
   @Render('chat-space')
-  getChatSpace(@Param('url') url: string) {
+  getChatSpace(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('url') url: string,
+  ) {
+    console.log('chat-space!!!');
     return { url };
   }
 
-  @Patch(':id')
+  @Patch('/chat-spaces/:id')
   update(
     @Param('id') id: string,
     @Body() updateChatSpaceDto: UpdateChatSpaceDto,
@@ -46,7 +59,7 @@ export class ChatSpacesController {
     return this.chatSpacesService.update(+id, updateChatSpaceDto);
   }
 
-  @Delete(':id')
+  @Delete('/chat-spaces/:id')
   remove(@Param('id') id: string) {
     return this.chatSpacesService.remove(+id);
   }

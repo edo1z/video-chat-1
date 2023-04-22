@@ -54,7 +54,7 @@ textarea {
 
 /* Header styles */
 header {
-  background: linear-gradient(to right, purple, blue);
+  background: linear-gradient(to right, purple, #44d);
   color: white;
   padding: 15px;
 }
@@ -105,7 +105,7 @@ p {
 button {
   padding: 10px 20px;
   border-radius: 25px;
-  background: linear-gradient(to right, purple, blue);
+  background: linear-gradient(to right, purple, #44d);
   color: white;
   font-weight: bold;
   border: none;
@@ -115,7 +115,7 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(to left, purple, blue);
+  background: linear-gradient(to left, purple, #44d);
 }
 
 .switch {
@@ -209,4 +209,23 @@ input[type=checkbox] {
 
 #setting_contents {
   width: 70%;
+}
+
+/* Table styles */
+table {
+  text-align: center;
+  width: 100%;
+}
+
+thead {
+  background: linear-gradient(to right, #92a, #66f);
+}
+
+thead th {
+  color: white;
+  padding: 10px;
+}
+
+tbody td {
+  padding: 10px;
 }

@@ -1,4 +1,5 @@
 import { NestFactory, Reflector } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
@@ -17,6 +18,7 @@ const hbsConfig = hbsEngine({
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TemplateInterceptor(new Reflector()));
   app.useStaticAssets(join(__dirname, '..', 'public'));

@@ -34,7 +34,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         });
         break;
       default:
-        console.error('ERROR!', `[${status}]`, exception.message);
+        console.error('ERROR!', `[${status}]`, exception.message, errorMessage);
         response.render(template || 'error', {
           status,
           error_message: errorMessage,
